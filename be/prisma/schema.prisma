@@ -28,7 +28,8 @@ model User {
   distributor Distributor?
   producer    Producer?
 
-  application Application[]
+  received_application  Application[] @relation("RequestedApplication")
+  sended_application    Application[] @relation("RequesterApplication")
 }
 
 
@@ -53,33 +54,36 @@ model Producer {
   Produce_category  Produce_category[]
 }
 
-
-model Distribute_category {
-  distributor_id    Int
-  distributor       Distributor @relation(fields:[distributor_id], references:[id])
-
-  category_id       Int
-  category          Category
-
-  @@id([distributor_id, category_id])
-}
-
-model Produce_category {
-  producer_id       Int
-  producer          Producer  @relation(fields:[producer_id], references:[id])
-
-  category_id       Int
-  category          Category @relation(fields:[category_id], references:[id])
-
-  @@id([producer_id, category_id])
-}
-
-
 model Category {
   id          Int @id @default(autoincrement())
   name        String
 
   product     Product[]
+  produce     Produce_category[]
+
+  distribute  Distribute_category[]
+
+}
+
+model Distribute_category {
+  distributor_id    Int
+  distributor       Distributor @relation(fields:[distributor_id], references:[user_id])
+
+  category_id       Int
+  category          Category @relation(fields:[category_id], references: [id])
+
+  @@id([distributor_id, category_id])
+}
+
+
+model Produce_category {
+  producer_id       Int
+  producer          Producer  @relation(fields:[producer_id], references:[user_id])
+
+  category_id       Int
+  category          Category @relation(fields:[category_id], references:[id])
+
+  @@id([producer_id, category_id])
 }
 
 
@@ -97,7 +101,7 @@ model Product {
   unit_of_measurement   Unit_of_Measurement @relation(fields:[uom_id], references:[id])
 
   producer_id Int
-  producer    Producer  @relation(fields:[producer_id], references:[id])
+  producer    Producer  @relation(fields:[producer_id], references:[user_id])
 
   transaction Transaction_product[]
 }
@@ -106,6 +110,8 @@ model Product {
 model Unit_of_Measurement {
   id          Int @id @default(autoincrement())
   name        String
+
+  product     Product[]
 }
 
 
@@ -126,10 +132,10 @@ model Application {
   status          Int   @db.TinyInt
   
   requester_id    Int
-  requester       User @relation(fields:[requester_id], references:[id]) 
+  requester       User @relation("RequesterApplication", fields:[requester_id], references:[id]) 
 
   requested_id    Int
-  requested       User @relation(fields:[requested_id], references:[id]) 
+  requested       User @relation("RequestedApplication", fields:[requested_id], references:[id]) 
   
   Transaction     Transaction[]
 }
@@ -145,6 +151,7 @@ model Transaction {
 
   application_id  Int
   application      Application @relation(fields:[application_id], references:[id])
+  transaction_product Transaction_product[]
 }
 
 
