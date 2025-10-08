@@ -23,7 +23,7 @@ model User {
   website     String?
   address     String?
   detail      String?
-  profile_pic String
+  profile_pic String?
 
   distributor Distributor?
   producer    Producer?
