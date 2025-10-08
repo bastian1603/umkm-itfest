@@ -28,6 +28,10 @@ export const create = async (req, res) => {
             throw new Error("password dan konfirmasi password tidak sama")
         }
 
+        const user_email = user_service.check_email(body.email);
+
+        if (user_email) throw new Error("Email sudah digunakan");
+
         const datas = {
             username: body.username,
             email: body.email,

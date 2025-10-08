@@ -1,5 +1,11 @@
 import { prisma } from "../../config/db.js";
 
+export const check_email = async (user_email) => {
+    return await prisma.user.findFirst({
+        email: user_email
+    })
+}
+
 export const get_all_users = async () => {
     return await prisma.user.findMany();
 }

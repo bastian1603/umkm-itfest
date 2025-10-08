@@ -20,6 +20,7 @@ model User {
   username    String  @unique
   password    String
   email       String  @unique
+  is_producer Boolean
   website     String?
   address     String?
   detail      String?
