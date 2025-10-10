@@ -18,6 +18,7 @@ export const login = async (req, res) => {
         });
 
         const token = generate_token({
+            id: user.id,
             email: user.email, 
             username: user.username
         });

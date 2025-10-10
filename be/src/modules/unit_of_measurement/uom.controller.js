@@ -32,7 +32,7 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
     try{
         const data = req.body;
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
 
         const uom = uom_service.update(id, data);
 
@@ -48,7 +48,7 @@ export const update = async (req, res) => {
 
 export const destroy = async (req, res) => {
     try{
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
 
         await uom_service.destroy(id);
 

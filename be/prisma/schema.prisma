@@ -131,7 +131,8 @@ model Application {
   reply           String
   timestamps      DateTime
   status          Int   @db.TinyInt
-  
+  is_readed       Boolean @default(false)
+
   requester_id    Int
   requester       User @relation("RequesterApplication", fields:[requester_id], references:[id]) 
 
@@ -147,6 +148,7 @@ model Transaction {
   note            String
   status          Int   @db.TinyInt
   price_total     Int
+  is_readed       Boolean @default(false)
   timestamps      DateTime
   requester_role  String @db.Char(1)
 

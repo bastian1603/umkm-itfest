@@ -13,7 +13,7 @@ export const index = async (req, res) => {
 
 export const show = async (req, res) => {
     try{
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
         const items = await product_service.get_by_id(id);
 
         return res.json({
@@ -46,7 +46,7 @@ export const create = async (req, res) => {
 
 export const update = async (req, res) => {
     try{
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
         const data = req.body;
 
         const product = product_service.update(id, data);
@@ -64,7 +64,7 @@ export const update = async (req, res) => {
 
 export const destroy = async (req, res) => {
     try{
-        const id = req.params.id
+        const id = parseInt(req.params.id)
 
         await product_service.destroy(id);
 
