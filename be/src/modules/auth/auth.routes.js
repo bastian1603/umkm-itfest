@@ -5,4 +5,4 @@ const auth_router = express.Router()
 
 auth_router.post("/", auth_controller.login);
 
-export default auth_router
+export default auth_router;

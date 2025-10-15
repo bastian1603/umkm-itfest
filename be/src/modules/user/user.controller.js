@@ -30,7 +30,7 @@ export const create = async (req, res) => {
 
         const user_email = user_service.check_email(body.email);
 
-        if (user_email) throw new Error("Email sudah digunakan");
+        if (!user_email) throw new Error("Email sudah digunakan");
 
         const datas = {
             username: body.username,
@@ -39,7 +39,8 @@ export const create = async (req, res) => {
             website: body.website,
             address: body.address,
             profile_pic: body.profile_pic, 
-            detail: body.detail
+            detail: body.detail,
+            is_producer: body.is_producer
         }
 
         const user = await user_service.regist(datas);
