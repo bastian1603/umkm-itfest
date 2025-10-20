@@ -1,5 +1,8 @@
-import * as user_service from "./user.service.js"
+import * as user_service from "./user.service.js";
+import * as producer_service from "../producer/producer.service.js";
 import argon2 from "argon2";
+
+
 
 const hash = async (plain) => {
     return await argon2.hash(plain);
@@ -12,12 +15,26 @@ const verify = async (hashed, plain) => {
 
 export const get_users = async (req, res) => {
     try {
-        const users = await   user_service.get_all_users();
+        const users = await user_service.get_all_users();
         res.json(users);
     }catch (e) {
         res.status(500).json({ message: e.message });
     }
 };
+
+
+export const show = async (req, res) => {
+    try {
+        const user = await user_service.get_user(parseInt(req.params.id));
+        const producer = await producer_service.show(parseInt(req.params.id))
+        res.json([
+            user, producer
+        ]);
+    }catch (e) {
+        res.status(500).json({ message: e.message });
+
+    }
+}
 
 
 export const create = async (req, res) => {
@@ -36,17 +53,41 @@ export const create = async (req, res) => {
             username: body.username,
             email: body.email,
             password: await hash(body.password),
-            website: body.website,
-            address: body.address,
-            profile_pic: body.profile_pic, 
-            detail: body.detail,
+            website: body.website || null,
+            address: body.address || null,
+            profile_pic: body.profile_pic || null, 
+            detail: body. detail || null,
             is_producer: body.is_producer
         }
 
         const user = await user_service.regist(datas);
-        res.status(201).json(user);
+        let a = [
+            user
+        ]
+        if(user.is_producer) {
+            // role producer
+            const role_datas = {
+                user_id: user.id,
+                status: true,
+                factory_location: "aaa"
+            };
+            const producer = await producer_service.create(role_datas);
+            a.push(producer);   
+        }else {
+            // role distributor
+            // const role_datas = {
+            //     user_id: user.id,
+            //     status: 1,
+            //     factory_location: "aaa"
+            // }
+            // const producer = distributor_datas(producer_datas);
+        }
+
+        res.status(201).json(a);
+
+
     }catch (e) {
-        res.status(400).json({ message: e.message });
+        res.status(500).json({ message: e.message });
     }
 }
 
@@ -80,9 +121,7 @@ export const update = async (req, res) => {
 export const destroy = async (req, res) => {
     try {
         const user_id = parseInt(req.params.id)
-        const result = await user_service.destroy({
-            where: {id: user_id}
-        });
+        const result = await user_service.destroy(user_id);
 
         res.json({
             message: "Berhasil menghapus akun",

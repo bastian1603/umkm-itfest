@@ -1,6 +1,7 @@
 import argon2 from "argon2";
 import { get_user } from "./auth.service.js";
 import { generate_token } from "../../config/jwt.js";
+import { is_producer } from "../../middleware/auth.middleware.js";
 
 
 export const login = async (req, res) => {
@@ -20,7 +21,8 @@ export const login = async (req, res) => {
         const token = generate_token({
             id: user.id,
             email: user.email, 
-            username: user.username
+            username: user.username,
+            is_producer: user.is_producer
         });
 
         return res.json({

@@ -12,6 +12,14 @@ export const get_all_users = async () => {
     return await prisma.user.findMany();
 }
 
+export const get_user = async (user_id) => {
+    return await prisma.user.findUnique({
+        where: {
+            id: user_id
+        }
+    });
+} 
+
 export const regist = async (data) => {
     return await prisma.user.create({ data });
 }

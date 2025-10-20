@@ -1,10 +1,13 @@
 import { prisma } from "../../config/db";
 
-export const requester_application = async (id) => {
+export const requester_application = async (user_id, query) => {
     return await prisma.application.findMany({
         where: {
-            requester_id: id
-        }
+            requester_id: user_id,
+            title: {
+                contains: query
+            }
+        },
     });
 };
 

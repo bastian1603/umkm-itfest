@@ -3,8 +3,9 @@ import * as application_service from "./application.service.js";
 
 export const index = async (req, res) =>{
     try {
-        const user_id = req.user.id;
-        const applications = application_service.index(req.body.query)
+        const user_id = parseInt(req.user.id);
+
+        const applications = await application_service.index(req.body.query);
     }catch (e) {
         return res.status(500).json({
             message: `Gagal mengambil data application: ${e.message}`

@@ -3,7 +3,8 @@ import * as product_service from "./product.service.js";
 
 export const index = async (req, res) => {
     try{
-        
+        const result = await product_service.get_by_filter();
+        res.json(result);
     }catch (e) {
         return res.status(500).json({
             message: `Gagal  product: ${e.message}`
@@ -30,8 +31,12 @@ export const show = async (req, res) => {
 export const create = async (req, res) => {
     try{
         const data = req.body;
-        data.producer_id = req.user.id;
-        const result = product_service.create(data);
+
+        const user_id = req.user.id;
+        data.producer_id = parseInt(user_id);
+        console.log(user_id);
+
+        const result = await product_service.create(data);
 
         return res.json({
             message: "Berhasil menambahkan produk baru",
@@ -66,7 +71,7 @@ export const destroy = async (req, res) => {
     try{
         const id = parseInt(req.params.id)
 
-        await product_service.destroy(id);
+        const product = await product_service.destroy(id);
 
         return res.json({
             message: "Berhasil menghapus produk"

@@ -20,7 +20,8 @@ export const create = async (req, res) => {
         const category = await category_service.create(data);
 
         return res.json({
-            message: "Berhasil menambahkan kategori baru."
+            message: "Berhasil menambahkan kategori baru.",
+            result: category
         })
     }catch (e) {
         return res.status(500).json({
@@ -50,7 +51,7 @@ export const destroy = async (req, res) => {
     try{
         const id = parseInt(req.params.id);
 
-        await category_service.destroy(id);
+        const category = await category_service.destroy(id);
 
         return res.json({
             message: "Berhasil menghapus kategori."
